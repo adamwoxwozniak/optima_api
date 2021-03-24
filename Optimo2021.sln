@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optimo2021", "Optimo2021\Optimo2021.csproj", "{365B6611-8D34-425F-A6B6-052B2BE2F7CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{365B6611-8D34-425F-A6B6-052B2BE2F7CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365B6611-8D34-425F-A6B6-052B2BE2F7CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365B6611-8D34-425F-A6B6-052B2BE2F7CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365B6611-8D34-425F-A6B6-052B2BE2F7CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FBAA8F70-4BE2-44CF-B498-8A0FA15037DB}
+	EndGlobalSection
+EndGlobal
