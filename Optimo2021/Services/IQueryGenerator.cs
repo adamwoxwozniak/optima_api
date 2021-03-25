@@ -1,4 +1,6 @@
 ﻿using Optimo2021.Models.Filters;
+using SqlKata;
+using SqlKata.Compilers;
 
 namespace Optimo2021.Services
 {
@@ -11,28 +13,30 @@ namespace Optimo2021.Services
     {
         public string SelectQuery(GetFilter filter)
         {
-            if(!string.IsNullOrEmpty(filter.Where))
+            var compiler = new SqlServerCompiler();
+
+            var query = new Query(filter.Table).SelectRaw(filter.Columns);
+
+            if(filter.Where.Count > 0)
             {
-                if(!string.IsNullOrEmpty(filter.Sort))
+                foreach(var where in filter.Where)
                 {
-                    return $"select {filter.Columns} from CDN.{filter.Table} where {filter.Where} order by {filter.Sort}";
-                }
-                else
-                {
-                    return $"select {filter.Columns} from CDN.{filter.Table} where {filter.Where}";
+                    query.Where(where.Column, where.Operator, where.Value);
                 }
             }
-            else
+
+            if (!string.IsNullOrEmpty(filter.Sort))
+                query.OrderByRaw(filter.Sort);
+
+            if (filter.Join.Count > 0)
             {
-                if (!string.IsNullOrEmpty(filter.Sort))
+                foreach(var join in filter.Join)
                 {
-                    return $"select {filter.Columns} from CDN.{filter.Table} order by {filter.Sort}";
-                }
-                else
-                {
-                    return $"select {filter.Columns} from CDN.{filter.Table}";
+                    query.Join(join.JoinTable, join.SourceColumn, join.JoinColumn);
                 }
             }
+
+            return compiler.Compile(query).ToString();
         }
     }
 }

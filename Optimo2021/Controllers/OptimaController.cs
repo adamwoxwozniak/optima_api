@@ -1,11 +1,8 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Optimo2021.Models.Filters;
 using Optimo2021.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Optimo2021.Controllers
@@ -16,21 +13,34 @@ namespace Optimo2021.Controllers
     {
         private readonly IDbConnectionFactory _dbConnectionFactory;
         private readonly IQueryGenerator _queryGenerator;
+        private readonly IKeyValidator _keyValidator;
 
-        public OptimaController(IDbConnectionFactory dbConnectionFactory, IQueryGenerator queryGenerator)
+        public OptimaController(IDbConnectionFactory dbConnectionFactory, IQueryGenerator queryGenerator, IKeyValidator keyValidator)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _queryGenerator = queryGenerator;
+            _keyValidator = keyValidator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SelectData([FromBody] GetFilter filter)
+        [HttpPost("{key}")]
+        public async Task<IActionResult> SelectData([FromRoute] string key, [FromBody] GetFilter filter)
         {
-            using(var db = _dbConnectionFactory.CreateCompanyConnection())
+            try
             {
-                var result = await db.QueryAsync(_queryGenerator.SelectQuery(filter));
+                if (_keyValidator.Validate(key))
+                {
+                    using (var db = _dbConnectionFactory.CreateCompanyConnection())
+                    {
+                        var result = await db.QueryAsync(_queryGenerator.SelectQuery(filter));
 
-                return Ok(result);
+                        return Ok(result);
+                    }
+                }
+                return Unauthorized();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(400, new { ex.Message, ex.StackTrace });
             }
         }
     }
